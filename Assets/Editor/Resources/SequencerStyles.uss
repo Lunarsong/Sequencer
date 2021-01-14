@@ -33,7 +33,7 @@
 }
 
 .SequencerItemsView__Grid-Background {
-  --spacing-horizontal: 60;
+  --spacing-horizontal: 0;
   --spacing-vertical: 0;
   --thick-lines: 0;
   --line-color: rgba(255, 255, 255, 0.1);
@@ -42,12 +42,13 @@
 }
 
 .SequencerTimeView__Grid-Background {
-  --spacing-horizontal: 60;
+  --vertical-lines-offset: 20;
+  /*--spacing-horizontal: 60;*/
+  --spacing-horizontal: 0;
   --spacing-vertical: 100;
   --thick-lines: 0;
   --line-color: rgba(255, 255, 255, 0.1);
   --thick-line-color: rgba(255, 255, 255, 0.125);
-  --vertical-lines-offset: 20;
   background-color: rgba(32, 32, 32, 1.0);
 }
 
@@ -87,7 +88,7 @@
   height: 52px;
   margin-top: 4px;
   margin-bottom: 4px;
-  border-left-width: 8px;
+  border-left-width: 12px;
   border-left-color: magenta;
   margin-left: 10px;
   border-bottom-left-radius: 4px;
@@ -99,6 +100,48 @@
   height: 52px;
   margin-top: 4px;
   margin-bottom: 4px;
+  padding-left: 20px;
+  padding-right: 20px;
   /*background-color: rgba(0, 100, 100, 0.4);*/
   background-color: rgba(120, 120, 120, 0.2);
+}
+
+.Sequencer__TimeItem__Track {
+  flex-grow: 1;
+}
+
+.Track-Segment {
+  height: 100%;
+  position: absolute;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  justify-content: space-between;
+  flex-direction: row;
+}
+
+.Track-Segment__Container {
+  height: 100%;
+  flex-grow: 1;
+  background-color: deepskyblue;
+  border-radius: 8px;
+  justify-content: space-between;
+  flex-direction: row;
+}
+
+.Track_Segment__Left-Resizer {
+  width: 8px;
+  height: 100%;
+  background-color:royalblue;
+  border-bottom-left-radius: 8px;
+  border-top-left-radius: 8px;
+  cursor: resize-horizontal;
+}
+
+.Track_Segment__Right-Resizer {
+  width: 8px;
+  height: 100%;
+  background-color:royalblue;
+  border-bottom-right-radius: 8px;
+  border-top-right-radius: 8px;
+  cursor: resize-horizontal;
 }

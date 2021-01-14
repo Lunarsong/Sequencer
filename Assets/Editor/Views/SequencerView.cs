@@ -30,7 +30,21 @@ public class SequencerView : VisualElement
             m_SequencerItemsView.Add(itemElement);
             VisualElement timeElement = new VisualElement();
             timeElement.AddToClassList("Sequencer__TimeItem");
+            VisualElement trackElement = new VisualElement();
+            trackElement.AddToClassList("Sequencer__TimeItem__Track");
+            TrackSegmentCreator trackCreationManipulator = new TrackSegmentCreator() { TickSize = 20.0f };
+            trackElement.AddManipulator(trackCreationManipulator);
+            trackCreationManipulator.OnCreate += OnTrackTimeCreated;
+            timeElement.Add(trackElement);
             m_SequencerTimeView.Add(timeElement);
         };
+    }
+
+    void OnTrackTimeCreated(VisualElement target, float x0, float x1)
+    {
+        TrackSegment newTrack = new TrackSegment();
+        newTrack.style.left = x0;
+        newTrack.style.width = x1 - x0;
+        target.Add(newTrack);
     }
 }
