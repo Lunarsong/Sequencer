@@ -19,8 +19,8 @@ public class TimeBar : VisualElement
     static readonly int s_DefaultMediumLineSpacing = 5;
     static readonly int s_DefaultThickLineSpacing = 10;
     static readonly int s_DefaultLineHeight = 5;
-    static readonly int s_DefaultMediumLineHeight = 18;
-    static readonly int s_DefaultThickLineHeight = 27;
+    static readonly int s_DefaultMediumLineHeight = 14;
+    static readonly int s_DefaultThickLineHeight = 22;
     static readonly Color s_DefaultLineColor = new Color(1.0f, 1.0f, 1.0f, 0.2f);
     static readonly Color s_DefaultMediumLineColor = new Color(1.0f, 1.0f, 1.0f, 0.4f);
     static readonly Color s_DefaultThickLineColor = new Color(1.0f, 1.0f, 1.0f, 0.6f);    
@@ -38,6 +38,7 @@ public class TimeBar : VisualElement
     public TimeBar()
     {
         RegisterCallback<CustomStyleResolvedEvent>(OnCustomStyleResolved);
+        RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
         generateVisualContent = OnGenerateVisualContent;
     }
 
@@ -126,6 +127,28 @@ public class TimeBar : VisualElement
             mesh.SetNextIndex((ushort)(vertexOffset + 3));
             mesh.SetNextIndex((ushort)(vertexOffset + 2));
             vertexOffset += 4;
+        }
+    }
+
+    void OnGeometryChanged(GeometryChangedEvent e)
+    {
+        float kLabelOffsetX = 2.0f;
+        float kLabelOffsetY = 4.0f;
+        this.Clear();
+        if (Spacing == 0 || ThickLineSpacing == 0)
+        {
+            return;
+        }
+        int numLabels = ((int)(contentRect.width / (Spacing * ThickLineSpacing)) + 1);
+        for (int i = 0; i < numLabels; ++i)
+        {
+            int thinkLineIndex = i * ThickLineSpacing;
+            Label label = new Label(thinkLineIndex.ToString());
+            label.style.left = this.contentRect.xMin + thinkLineIndex * Spacing + kLabelOffsetX;
+            label.style.top = this.contentRect.yMin + kLabelOffsetY;
+            label.style.position = Position.Absolute;
+            label.style.unityTextAlign = TextAnchor.UpperLeft;
+            Add(label);
         }
     }
 }
