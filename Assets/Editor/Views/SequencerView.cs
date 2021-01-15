@@ -38,6 +38,17 @@ public class SequencerView : VisualElement
             timeElement.Add(trackElement);
             m_SequencerTimeView.Add(timeElement);
         };
+
+        var itemsScrollView = m_SequencerItemsView.Q<ScrollView>();
+        var timeScrollView = m_SequencerTimeView.Q<ScrollView>();
+        itemsScrollView.verticalScroller.valueChanged += value =>
+        {
+            timeScrollView.verticalScroller.value = value;
+        };
+        timeScrollView.verticalScroller.valueChanged += value =>
+        {
+            itemsScrollView.verticalScroller.value = value;
+        };
     }
 
     void OnTrackTimeCreated(VisualElement target, float x0, float x1)
