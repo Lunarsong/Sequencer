@@ -17,6 +17,7 @@ public class TrackSegment : VisualElement
     public TrackSegment()
     {
         AddToClassList(kClassName);
+        this.AddManipulator(new TrackSegmentMoveManipulator() { TickSize = 20.0f });
 
         m_ContentContainer = new VisualElement();
         m_ContentContainer.AddToClassList("Track-Segment__Container");
@@ -35,6 +36,7 @@ public class TrackSegment : VisualElement
 
         RegisterCallback<MouseOverEvent>(OnMouseOver);
         RegisterCallback<MouseOutEvent>(OnMouseOut);
+        RegisterCallback<MouseMoveEvent>(OnMouseMove);
     }
 
     void OnMouseOver(MouseOverEvent e)
@@ -42,6 +44,10 @@ public class TrackSegment : VisualElement
         e.StopImmediatePropagation();
     }
     void OnMouseOut(MouseOutEvent e)
+    {
+        e.StopImmediatePropagation();
+    }
+    void OnMouseMove(MouseMoveEvent e)
     {
         e.StopImmediatePropagation();
     }

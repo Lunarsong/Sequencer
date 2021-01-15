@@ -48,10 +48,8 @@ public class TrackSegmentCreator : MouseManipulator
     void OnMouseMove(MouseMoveEvent e)
     {
         CurrentLocalMousePos = e.localMousePosition;
-        if (IsActive || IsClicked)
-        {
-            target.MarkDirtyRepaint();
-        }
+        IsActive = true;
+        target.MarkDirtyRepaint();
         if (IsClicked)
         {
             e.StopImmediatePropagation();
@@ -73,7 +71,9 @@ public class TrackSegmentCreator : MouseManipulator
         if (IsClicked)
         {
             IsClicked = false;
+            IsActive = false;
             e.StopImmediatePropagation();
+            target.MarkDirtyRepaint();
 
             float x0 = ClickedLocalMousePos.x;
             float x1 = CurrentLocalMousePos.x;

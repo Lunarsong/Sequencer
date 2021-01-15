@@ -134,6 +134,8 @@
   border-radius: 8px;
   justify-content: space-between;
   flex-direction: row;
+  cursor: move-arrow;
+  /*cursor: resource("d_MoveTool On.png");*/
 }
 
 .Track_Segment__Left-Resizer {
