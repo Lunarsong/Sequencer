@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEditor;
-using UnityEngine;
 
 public class SequencerWindow : EditorWindow
 {
@@ -13,8 +10,16 @@ public class SequencerWindow : EditorWindow
         window.Show();
     }
 
+    SequencerView m_SequencerView;
+    
     private void OnEnable()
     {
-        rootVisualElement.Add(new SequencerView());
+        m_SequencerView = new SequencerView();
+
+        m_SequencerView.AddButtonClicked += () => {
+            m_SequencerView.AddTrack(new SegmentedTrack());
+        };
+
+        rootVisualElement.Add(m_SequencerView);
     }
 }
