@@ -17,7 +17,7 @@ public class SequencerView : VisualElement
     ScrollView m_ItemsViewScrollView;
     ScrollView m_TimeViewScrollView;
 
-    Dictionary<Type, object> m_ViewCreations = new Dictionary<Type, object>();
+    Dictionary<Type, Delegate> m_ItemCreations = new Dictionary<Type, Delegate>();
     
     public SequencerView()
     {
@@ -76,29 +76,29 @@ public class SequencerView : VisualElement
         }
     }
 
-    public delegate void ViewCreation<T>(T data, out VisualElement leftHandSide, out VisualElement rightHandSide);
+    public delegate void ItemCreation<T>(T data, out VisualElement detailElement, out VisualElement trackElement);
 
-    public void RegisterViewCreation<T>(ViewCreation<T> viewCreation)
+    public void RegisterItemCreation<T>(ItemCreation<T> itemCreation)
     {
-        m_ViewCreations.Add(typeof(T), viewCreation);
+        m_ItemCreations[typeof(T)] = itemCreation;
     }
 
-    public void CreateView<T>(T data)
+    public void CreateItem<T>(T data)
     {
-        CreateView(data, out _, out _);
+        CreateItem(data, out _, out _);
     }
 
-    public void CreateView<T>(T data, out VisualElement leftHandSide, out VisualElement rightHandSide)
+    public void CreateItem<T>(T data, out VisualElement detailElement, out VisualElement trackElement)
     {
-        if (m_ViewCreations.TryGetValue(typeof(T), out var viewCreation))
+        if (m_ItemCreations.TryGetValue(typeof(T), out var itemCreation))
         {
-            ((ViewCreation<T>)viewCreation)(data, out leftHandSide, out rightHandSide);
-            m_SequencerItemsView.Add(leftHandSide);
-            m_SequencerTimeView.Add(rightHandSide);
+            ((ItemCreation<T>)itemCreation)(data, out detailElement, out trackElement);
+            m_SequencerItemsView.Add(detailElement);
+            m_SequencerTimeView.Add(trackElement);
         }
         else
         {
-            throw new Exception($"There is no ViewCreation registered for type {typeof(T)}.");
+            throw new Exception($"There is no ItemCreation<{typeof(T)}> registered in this {nameof(SequencerView)}.");
         }
     }
 }
