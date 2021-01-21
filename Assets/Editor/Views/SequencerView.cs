@@ -14,6 +14,9 @@ public class SequencerView : VisualElement
     SequencerItemsView m_SequencerItemsView;
     SequencerTimeView m_SequencerTimeView;
 
+    ScrollView m_ItemsViewScrollView;
+    ScrollView m_TimeViewScrollView;
+
     Dictionary<Type, object> m_ViewCreations = new Dictionary<Type, object>();
     
     public SequencerView()
@@ -30,16 +33,47 @@ public class SequencerView : VisualElement
 
         m_SequencerItemsView.AddButtonClicked += () => AddButtonClicked?.Invoke();
 
-        var itemsScrollView = m_SequencerItemsView.Q<ScrollView>();
-        var timeScrollView = m_SequencerTimeView.Q<ScrollView>();
-        itemsScrollView.verticalScroller.valueChanged += value =>
+        m_ItemsViewScrollView = m_SequencerItemsView.Q<ScrollView>();
+        m_TimeViewScrollView = m_SequencerTimeView.Q<ScrollView>();
+        m_ItemsViewScrollView.verticalScroller.valueChanged += value =>
         {
-            timeScrollView.verticalScroller.value = value;
+            m_TimeViewScrollView.verticalScroller.value = value;
         };
-        timeScrollView.verticalScroller.valueChanged += value =>
+        m_TimeViewScrollView.verticalScroller.valueChanged += value =>
         {
-            itemsScrollView.verticalScroller.value = value;
+            m_ItemsViewScrollView.verticalScroller.value = value;
         };
+        
+        m_ItemsViewScrollView.contentViewport.RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
+        m_ItemsViewScrollView.contentContainer.RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
+        m_TimeViewScrollView.contentViewport.RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
+        m_TimeViewScrollView.contentContainer.RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
+    }
+
+    void OnGeometryChanged(GeometryChangedEvent e)
+    {
+        var itemsViewScrollerVisible = m_ItemsViewScrollView.horizontalScroller.visible;
+        var timeViewScrollerVisible = m_TimeViewScrollView.horizontalScroller.visible;
+
+        if (itemsViewScrollerVisible)
+        {
+            if (!timeViewScrollerVisible)
+            {
+                m_TimeViewScrollView.contentViewport.style.marginBottom = m_ItemsViewScrollView.contentViewport.style.marginBottom;
+            }
+        }
+        else
+        {
+            if (timeViewScrollerVisible)
+            {
+                m_ItemsViewScrollView.contentViewport.style.marginBottom = m_TimeViewScrollView.contentViewport.style.marginBottom;
+            }
+            else
+            {
+                m_ItemsViewScrollView.contentViewport.style.marginBottom = 0f;
+                m_TimeViewScrollView.contentViewport.style.marginBottom = 0f;
+            }
+        }
     }
 
     public delegate void ViewCreation<T>(T data, out VisualElement leftHandSide, out VisualElement rightHandSide);
